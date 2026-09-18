@@ -1,0 +1,78 @@
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Restore debug keystore if available
+        run: |
+          if [ -f debug.keystore.base64 ]; then
+            base64 -d debug.keystore.base64 > debug.keystore
+          fi
+
+      - name: Grant execute permission for gradlew
+        run: |
+          if [ ! -f gradlew ]; then
+            gradle wrapper
+          fi
+          chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mahsa-music-v1.0-apk
+          path: app/build/outputs/apk/debug/*.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v1.0.0
+          name: "Mahsa Music v1.0.0 - اپلیکیشن سنتور مهسا موزیک"
+          body: |
+            ## 🎵 Mahsa Music (مهسا موزیک) v1.0.0
+            
+            فایل نصبی اپلیکیشن تخصصی سنتور آماده دانلود است:
+            
+            ### ✨ امکانات برنامه:
+            - **تیونر اختصاصی سنتور:** تفکیک ۳ اکتاو (سیم‌های زرد، سفید و پشت خرک) با نمایش دیاگرام ۹ خرک
+            - **پشتیبانی از ربع‌پرده‌ها:** علامت‌های کُرُن (𝄳) و سُری (𝄰) برای دستگاه‌های شور، همایون، اصفهان، سه‌گاه و...
+            - **مترونوم و سنسور تمپو:** تشخیص خودکار سرعت مضراب‌نوازی و مترونوم ۶/۸ و ۴/۴ با صدای چوب‌مضراب
+            - **ثبت جلسات تمرین:** ذخیره سابقه تمرینات، دقت ژوست‌نوازی و تمپو در دیتابیس محلی
+            - **استاد و راهنمای هوشمند هوش مصنوعی:** پاسخ به سوالات مضراب‌نوازی و تکنیک‌های ردیف
+            
+            📥 **دانلود فایل نصبی:** فایل `app-debug.apk` را از بخش Assets در زیر همین پست دانلود و روی گوشی اندروید نصب نمایید.
+          files: app/build/outputs/apk/debug/*.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
