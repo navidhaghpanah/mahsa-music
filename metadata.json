@@ -1,0 +1,6 @@
+{
+  "name": "Mahsa Music",
+  "description": "Persian Santoor tuner, real-time note & pitch detector, metronome tempo analyzer, and music practice tracker",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

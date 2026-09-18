@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:pathData="M0,0h108v108h-108z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="108"
+                android:endY="108"
+                android:type="linear">
+                <item android:offset="0.0" android:color="#0F172A" />
+                <item android:offset="0.5" android:color="#1E1B4B" />
+                <item android:offset="1.0" android:color="#312E81" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Subtle sound waves / acoustic arcs -->
+    <path
+        android:pathData="M18,90 C34,60 74,60 90,90"
+        android:strokeColor="#2563EB"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.4" />
+    <path
+        android:pathData="M26,96 C38,72 70,72 82,96"
+        android:strokeColor="#D97706"
+        android:strokeWidth="1.5"
+        android:strokeAlpha="0.3" />
+</vector>
